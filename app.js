@@ -18,3 +18,6 @@ app.get('/health', function(req, res) {
 
 app.listen(PORT);
 console.log("Server listening on: http://localhost:%s", PORT);
+
+// Export the app for unit testing
+module.exports = app;
