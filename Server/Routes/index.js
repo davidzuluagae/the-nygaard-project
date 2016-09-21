@@ -9,9 +9,9 @@ var config = require("../../Config/config");
 var express = require('express'); //-  ExpressJS Web Server Module ..  
 var router = express.Router();
 var path = require("path");
-var mongoose = require('mongoose');
-	mongoose.Promise = require('bluebird');
-	mongoose.connect( config.db );
+// var mongoose = require('mongoose');
+// 	mongoose.Promise = require('bluebird');
+// 	mongoose.connect( config.db );
 
 
 ////===----------------------------------====/////
