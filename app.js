@@ -1,7 +1,11 @@
+// Libs
 var express = require('express');
+var AWS = require('aws-sdk');
 
+// Configuration TODO: Move to seprate file / instance tags. 
 const PORT=8081; 
 
+// The app
 var app = express();
 
 app.get('/', function(req, res) {
