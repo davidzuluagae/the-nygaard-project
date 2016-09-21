@@ -13,7 +13,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/health', function(req, res) {
-  res.send( JSON.stringify({ "STATUS": "UP" }) );
+  res.json({ "STATUS": "UP" });
 });
 
 app.listen(PORT);
