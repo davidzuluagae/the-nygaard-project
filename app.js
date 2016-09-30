@@ -40,7 +40,7 @@ app.post('/', function(req,res){
     });
 
   } else {
-  	res.send("Negative")
+  	res.send("Negative: " + req.body)
   }
 
 });
