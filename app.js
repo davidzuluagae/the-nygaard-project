@@ -1,8 +1,8 @@
 // Libs
-var express = require('express');
-var aws = require('aws-sdk');
-var bodyParser = require('body-parser');
-var binary = require('binary');
+const express = require('express');
+const aws = require('aws-sdk');
+const bodyParser = require('body-parser');
+const binary = require('binary');
 
 // Configuration
 const PORT = process.env.PORT || 8081;
@@ -11,44 +11,45 @@ const API_KEY = process.env.API_KEY;
 const REGION = process.env.REGION || 'us-west-2';
 
 // The app
-var app = express();
+let app = express();
 
-aws.config.update({region: REGION});
+aws.config.update({REGION});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
     res.send('That was easy');
 });
 
 app.post('/', function (req, res) {
 
     if (req.body.apiKey == API_KEY) {
-        var sns = new aws.SNS();
+        let {Message, Subject} = req.body;
+        let sns = new aws.SNS();
         sns.publish(
             {
                 TargetArn: SNS_TOPIC,
-                Message: req.body.message,
-                Subject: req.body.subject
+                Message,
+                Subject
             },
-            function (err, data) {
+            (err, data) => {
                 if (err) {
-                    console.log("Error sending a message " + err);
-                    res.send("Error sending a message " + err);
+                    console.log(`Error sending a message ${err}`);
+                    res.send(`Error sending a message ${err}`);
                 } else {
-                    console.log("Sent message: " + data.MessageId);
-                    res.send("Sent message: " + data.MessageId);
+                    console.log(`Sent message: ${data.MessageId}`);
+                    res.send(`Sent message: ${data.MessageId}`);
                 }
             });
 
   } else {
-  	res.send("Negative: " + JSON.stringify(req.body) );
+  	res.send(`Negative: ${JSON.stringify(req.body)}`);
   }
 
 });
 
-app.get('/health', function (req, res) {
+app.get('/health', (req, res) => {
     res.json({"STATUS": "UP"});
 });
 
