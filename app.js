@@ -2,6 +2,7 @@
 var express = require('express');
 var aws = require('aws-sdk');
 var bodyParser = require('body-parser');
+var binary = require('binary');
 
 // Configuration
 const PORT = process.env.PORT || 8081;
@@ -22,9 +23,9 @@ app.get('/', function (req, res) {
 });
 
 app.post('/', function (req, res) {
-    var sns = new aws.SNS();
 
     if (req.body.apiKey == API_KEY) {
+        var sns = new aws.SNS();
         sns.publish(
             {
                 TargetArn: SNS_TOPIC,
