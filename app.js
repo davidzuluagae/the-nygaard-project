@@ -1,62 +1,47 @@
 // Libs
 const express = require('express');
-const aws = require('aws-sdk');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const binary = require('binary');
 
 // Configuration
 const PORT = process.env.PORT || 8081;
-const SNS_TOPIC = process.env.SNS_TOPIC;
-const API_KEY = process.env.API_KEY;
-const REGION = process.env.REGION || 'us-west-2';
+
+//The Routes
+var ringbell = require('./routes/ringbell');
+var health = require('./routes/healthcheck');
 
 // The app
 let app = express();
 
-aws.config.update({REGION});
+app.use('/', ringbell);
+app.use('/health', health);
 
+app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
 
-app.get('/', (req, res) => {
-    res.send('That was easy');
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+    let err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
-app.post('/', function (req, res) {
-
-    if (req.body.apiKey == API_KEY) {
-        let {Message, Subject} = req.body;
-        let sns = new aws.SNS();
-        sns.publish(
-            {
-                TargetArn: SNS_TOPIC,
-                Message,
-                Subject
-            },
-            (err, data) => {
-                if (err) {
-                    console.log(`Error sending a message ${err}`);
-                    res.send(`Error sending a message ${err}`);
-                } else {
-                    console.log(`Sent message: ${data.MessageId}`);
-                    res.send(`Sent message: ${data.MessageId}`);
-                }
-            });
-
-  } else {
-  	res.send(`Negative: ${JSON.stringify(req.body)}`);
-  }
-
-});
-
-app.get('/health', (req, res) => {
-    res.json({"STATUS": "UP"});
-});
+// error handler
+//app.use(function (err, req, res, next) {
+//    // set locals, only providing error in development
+//    res.locals.message = err.message;
+//    res.locals.error = req.app.get('env') === 'development' ? err : {};
+//
+//    // render the error page
+//    res.status(err.status || 500);
+//    res.render('error');
+//});
 
 app.listen(PORT);
 console.log("Server listening on: http://localhost:%s", PORT);
-console.log("Will publish events to: %s", SNS_TOPIC);
-console.log("API Key: %s", API_KEY);
 
 // Export the app for unit testing
 module.exports = app;

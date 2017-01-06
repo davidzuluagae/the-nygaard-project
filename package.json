@@ -16,7 +16,10 @@
   "dependencies": {
     "aws-sdk": "^2.6.4",
     "body-parser": "^1.15.2",
-    "express": "^4.14.0"
+    "cookie-parser": "~1.4.3",
+    "express": "^4.14.0",
+    "morgan": "~1.7.0",
+    "multer": "^1.2.1"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
