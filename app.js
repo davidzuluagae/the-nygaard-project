@@ -7,9 +7,9 @@ const bodyParser = require('body-parser');
 // Configuration
 const PORT = process.env.PORT || 8081;
 
-//The Routes
-var ringbell = require('./routes/ringbell');
-var health = require('./routes/healthcheck');
+// The Routes
+const ringbell = require('./routes/ringbell');
+const health = require('./routes/healthcheck');
 
 // The app
 let app = express();
@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
     let err = new Error('Not Found');
     err.status = 404;
     next(err);
